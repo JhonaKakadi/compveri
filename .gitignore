@@ -1,1 +1,4 @@
 /praktikum/relational_algebra/.lake/*
+*.aux
+*.log
+*.out

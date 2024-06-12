@@ -1,0 +1,123 @@
+# notes about papers
+
+## [0]
+@inproceedings{leroy:hal-01238879,
+  TITLE = {{CompCert - A Formally Verified Optimizing Compiler}},
+  AUTHOR = {Leroy, Xavier and Blazy, Sandrine and K{\"a}stner, Daniel and Schommer, Bernhard and Pister, Markus and Ferdinand, Christian},
+  URL = {https://inria.hal.science/hal-01238879},
+  BOOKTITLE = {{ERTS 2016: Embedded Real Time Software and Systems, 8th European Congress}},
+  ADDRESS = {Toulouse, France},
+  ORGANIZATION = {{SEE}},
+  YEAR = {2016},
+  MONTH = Jan,
+  PDF = {https://inria.hal.science/hal-01238879/file/erts2016_compcert.pdf},
+  HAL_ID = {hal-01238879},
+  HAL_VERSION = {v1},
+}
+
+## [1]
+@article{10.1145/1538788.1538814,
+  author = {Leroy, Xavier},
+  title = {Formal verification of a realistic compiler},
+  year = {2009},
+  issue_date = {July 2009},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {52},
+  number = {7},
+  issn = {0001-0782},
+  url = {https://doi.org/10.1145/1538788.1538814},
+  doi = {10.1145/1538788.1538814},
+  abstract = {This paper reports on the development and formal verification (proof of semantic preservation) of CompCert, a compiler from Clight (a large subset of the C programming language) to PowerPC assembly code, using the Coq proof assistant both for programming the compiler and for proving its correctness. Such a verified compiler is useful in the context of critical software and its formal verification: the verification of the compiler guarantees that the safety properties proved on the source code hold for the executable compiled code as well.},
+  journal = {Commun. ACM},
+  month = {jul},
+  PDF = {https://dl.acm.org/doi/pdf/10.1145/1538788.1538814},
+  pages = {107–115},
+  numpages = {9}
+}
+
+## [2]
+
+## [3]
+@article{Ivliev_2023,
+   title={Nemo: First Glimpse of a New Rule Engine},
+   volume={385},
+   ISSN={2075-2180},
+   url={http://dx.doi.org/10.4204/EPTCS.385.35},
+   DOI={10.4204/eptcs.385.35},
+   journal={Electronic Proceedings in Theoretical Computer Science},
+   publisher={Open Publishing Association},
+   author={Ivliev, Alex and Ellmauthaler, Stefan and Gerlach, Lukas and Marx, Maximilian and Meißner, Matthias and Meusel, Simon and Krötzsch, Markus},
+   year={2023},
+   month=sep, pages={333–335},
+   PDF = {https://arxiv.org/pdf/2308.15897}
+}
+
+## [4]
+@inproceedings{benzaken:hal-01745566,
+  TITLE = {{Certifying Standard and Stratified Datalog Inference Engines in SSReflect}},
+  AUTHOR = {Benzaken, V{\'e}ronique and Contejean, {\'E}velyne and Dumbrava, Stefania},
+  URL = {https://hal.science/hal-01745566},
+  BOOKTITLE = {{International Conference on Interective Theorem Proving}},
+  ADDRESS = {Brasilia, Brazil},
+  YEAR = {2017},
+  PDF = {https://hal.science/hal-01745566/file/ITP2017.pdf},
+  HAL_ID = {hal-01745566},
+  HAL_VERSION = {v1},
+}
+
+## [5]
+
+## [6]
+
+## [7]
+@inproceedings{Carral2019VLogAR,
+  title={VLog: A Rule Engine for Knowledge Graphs},
+  author={David Carral and Irina Dragoste and Larry Gonz{\'a}lez and Ceriel J. H. Jacobs and Markus Kr{\"o}tzsch and Jacopo Urbani},
+  booktitle={International Workshop on the Semantic Web},
+  year={2019},
+  url={https://api.semanticscholar.org/CorpusID:197642600},
+  pdf = {https://research.vu.nl/ws/portalfiles/portal/207639241/VLog_A_Rule_Engine_for_Knowledge_Graphs.pdf}
+}
+
+## [8]
+
+## [9]
+
+## [10]
+
+## [11]
+@misc{gladshtein2024small,
+      title={Small Scale Reflection for the Working Lean User}, 
+      author={Vladimir Gladshtein and George Pîrlea and Ilya Sergey},
+      year={2024},
+      pdf = {https://arxiv.org/pdf/2403.12733},
+      eprint={2403.12733},
+      archivePrefix={arXiv},
+      primaryClass={cs.PL}
+}
+
+## [12]
+@inproceedings{Benzaken2014ACF,
+  title={A Coq Formalization of the Relational Data Model},
+  author={V{\'e}ronique Benzaken and {\'E}velyne Contejean and Stefania Dumbrava},
+  booktitle={European Symposium on Programming},
+  year={2014},
+  url={https://api.semanticscholar.org/CorpusID:1198759},
+  pdf={https://www.lri.fr/~benzaken/papers/esop14.pdf}
+}
+
+## [13]
+@article{NIEMI198565,
+  title = {A straightforward formalization of the relational model},
+  journal = {Information Systems},
+  volume = {10},
+  number = {1},
+  pages = {65-76},
+  year = {1985},
+  issn = {0306-4379},
+  doi = {https://doi.org/10.1016/0306-4379(85)90010-9},
+  url = {https://www.sciencedirect.com/science/article/pii/0306437985900109},
+  author = {Timo Niemi and Kalervo Järvelin},
+}
+

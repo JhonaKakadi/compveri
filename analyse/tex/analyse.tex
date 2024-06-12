@@ -1,0 +1,144 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage[noadjust,noparboxrestore]{marginnote}
+\usepackage{pgf-umlcd}
+\makeatletter
+\def\todo{%
+    % open curly brace
+    \begingroup%
+    %
+    \color{teal}%
+    % check if we're in a float (as some things don't work in, e.g., a caption)
+    \ifnum\@floatpenalty<0\relax%
+    \else%
+        % draw bar in margin
+        \setlength{\columnsep}{2cm} % hack because marginnote mis-calculates where to start using right margin
+        \marginnote{\color{magenta}\rule{2pt}{1em}}%
+        % line breaks are line breaks...
+        \obeylines%
+        % ...space is space...
+        \obeyspaces%
+        % ...paragraphs are paragraphs...
+        \begingroup\lccode`~=`\^^M\lowercase{\endgroup\def~}{\par\leavevmode}%
+        % ...but don't indent them...
+        \parindent0em%
+        % ...underscore is underscore...
+        \catcode`\_=\active%
+        % ...and so are <>#^&
+        \catcode`\<=\active\lccode`~=`<\lowercase{\def~}{$<$}%
+        \catcode`\>=\active\lccode`~=`>\lowercase{\def~}{$>$}%
+        \catcode`\#=\active\lccode`~=`\#\lowercase{\def~}{$\#$}%
+        \catcode`\^=\active\lccode`~=`\^\lowercase{\def~}{$\hat{~}$}%
+        \catcode`\&=\active\lccode`~=`\&\lowercase{\def~}{\&}%
+    \fi%
+    % don't toke too early
+    \todoCtd%
+}\def\todoCtd#1{%
+    TODO: #1%
+    % if nothing was to be printed, print three dots
+    \ifx&#1&...\fi%
+    % check if we're in a float (as some things don't work in, e.g., a caption)
+    \ifnum\@floatpenalty<0\relax%
+    \else%
+    \fi%
+    % now forget everything
+    \endgroup%
+    % stop accepting tokens for this command
+    \relax%
+}
+
+
+\begin{document}
+
+\title{Towards Formally Verified Rule Language Compilers}
+\author{Antonio Hentschke}
+\maketitle
+
+\section{Introduction}
+\todo{
+	- insert an explanation what reasoning engines are and what they are used for 
+}
+
+Reasoning engines (e.g. Nemo, Vlog) are used to process queries.
+Queries are formulated in a query language (e.g. SQL) and need to be compiled to a rule language (Datalog, in this case).
+The query language is based on a formalism, like relational algebra or first-order logic.
+Both the compilation to the rule language to the query language and the processing by the reasoning engine need to be verified.
+We want a mechanical way for this verification, which would otherwise be very tedious and error prone to conduct manually.
+Since verification is already used in the field of compilers, the central question to be answered is:
+
+How can we adapt proof techniques from the field of formally verified compilers to the verification of Datalog reasoning engines?
+
+We also want to answer the following questions:
+\begin{itemize}
+    \item What is the notion of a program (to be verified) in a Datalog rule engine like Nemo?
+    \begin{itemize}
+        \item so how does the input language / query language look like?
+    \end{itemize}
+    \item What is a feasable specification for Datalog reasoners, formalized in a proof language (Coq or Lean)?
+    \item How shall the semantics of the rule language be formalized?
+    \begin{itemize}
+        \item Datalog
+    \end{itemize}
+    \item What are (high-level to low-level) transformations to be addressed by the formalization?
+    \begin{itemize}
+        \item as there exists a similarity to transformations of compilers (front end - middle end - back end)
+    \end{itemize}
+    \item Can the analysed proof techniques help in the re-interpretation task (from low-level to high-level reasoning)?
+\end{itemize}
+
+
+\subsection{Organisation}
+We will 
+This article is an analysis that shall give an overview of the formalisms that already exist describing relational algebra.
+We will conclude what kind of formalisms there are and what are examples, as well as their respective advantages over the others.
+What questions came up when researching it?
+We also want to distinguish between formalisms in Coq and Lean.
+Based on those, we shall then discuss what theorem prover is more suitable for further implementation.
+At the end, we will state the next steps that are necessary to realise the formal verification of for example Nemo - a Datalog reasoner.
+
+\section{Background}
+\subsection{What are the proof techniques in verifying compilers?}
+    \begin{itemize}
+	\item paper 0 
+	\item paper 1 
+    \end{itemize}
+\subsection{What formalisations of Datalog semantics are there already?}
+    \begin{itemize}
+	\item paper 8
+	\item (paper 4)
+    \end{itemize}
+\subsection{Are there already formalisations of rule engines?}
+    \begin{itemize}
+	\item (paper 3)
+	\item (paper 4)
+	\item paper 7
+    \end{itemize}
+\subsection{Formalisations of query languages and their formalisations}
+    \begin{itemize}
+	\item ... 
+    \end{itemize}
+\subsubsection{Relational Algebra}
+    \begin{itemize}
+	\item paper 13
+	\item paper 12
+    \end{itemize}
+
+\section{How it all works together}
+
+\section{How to verify Datalog reasoners}
+\subsection{Related to Practical Approach}
+    \begin{itemize}
+	\item paper 11
+    \end{itemize}
+
+
+\section{Can it be used for the re-interpretation task?}
+
+
+\end{document}
