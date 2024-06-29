@@ -80,7 +80,6 @@ example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) :=
           have hr : r := hpr.right
           show p ∧ (q ∨ r) from ⟨hp, Or.inr hr⟩))
 
-
 example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) :=
   Iff.intro
     (fun h₁ : p ∨ (q ∧ r) =>
@@ -89,33 +88,105 @@ example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) :=
         show (p ∨ q) ∧ (p ∨ r) from ⟨Or.inl hp, Or.inl hp⟩)
         (fun hqr : q ∧ r =>
         show (p ∨ q) ∧ (p ∨ r) from ⟨Or.inr hqr.left, Or.inr hqr.right⟩))
-
     (fun h₂ : (p ∨ q) ∧ (p ∨ r) =>
       have hpq : p ∨ q := h₂.left
       have hpr : p ∨ r := h₂.right
       show p ∨ (q ∧ r) from 
         Or.elim hpq
           (fun hp : p => Or.inl hp)
-          (fun hq : q => Or.inr hq)
-        Or.elim hpr
-          (fun hp : p => Or.inl hp)
-          (fun hr : r => Or.inr hr))
-
+          (fun hq : q => 
+            Or.elim hpr
+              (fun hp : p => Or.inl hp)
+              (fun hr : r => Or.inr (⟨hq, hr⟩))))
 
 -- other properties
 example : (p → (q → r)) ↔ (p ∧ q → r) :=
   Iff.intro
     (fun h : p → (q → r) => 
-      show p ∧ q → r from
-        (fun hp : p =>
-          (fun hq : q =>
-            (fun hr : r =>
-              (fun (fun hpq : p ∧ q => ⟨hp,hq⟩) =>
-                (fun hhr : r => hr))))))
+      (fun hpq : p ∧ q =>
+        let ⟨hp, hq⟩ := hpq
+        h hp hq))
     (fun h : p ∧ q → r =>
-      show p → (q → r) from sorry)
+      (fun hp : p =>
+        (fun hq : q =>
+          h ⟨hp,hq⟩)))
 
+example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) :=
+  Iff.intro
+    (fun h₁ : (p ∨ q) → r =>
+      And.intro
+        (fun hp => h₁ (Or.inl hp))
+        (fun hq => h₁ (Or.inr hq)))
+    (fun h₂ : (p → r) ∧ (q → r) => 
+      (fun hpq : p ∨ q =>
+        hpq.elim
+          (fun hp : p => h₂.left hp)
+          (fun hq : q => h₂.right hq)))
 
+example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=
+  Iff.intro
+    (fun h₁ : ¬(p ∨ q) =>
+      And.intro
+        (fun hp : p => show False from h₁ (Or.inl hp))
+        (fun hq : q => show False from h₁ (Or.inr hq)))
+    (fun h₂ : ¬p ∧ ¬q =>
+      (fun hpq : p ∨ q =>
+        hpq.elim
+          (fun hp : p => show False from h₂.left hp)
+          (fun hq : q => show False from h₂.right hq)))
 
+example : ¬p ∨ ¬q → ¬(p ∧ q) :=
+  (fun h : ¬p ∨ ¬q =>
+    And.intro
+      (fun hp : p => show False from
+        h.elim
+          (fun hnp : ¬p => show False from absurd hp hnp)
+          (fun hnq : ¬q => sorry))
+      (fun hq : q => show False from
+        h.elim
+          (fun hnp : ¬p => show False from sorry)
+          (fun hnq : ¬q => show False from absurd hq hnq)))
+
+example : ¬(p ∧ ¬p) :=
+  (fun hpnp : p ∧ ¬p =>
+    have hp := hpnp.left
+    have hnp := hpnp.right
+    show False from absurd hp hnp)
+
+example : p ∧ ¬q → ¬(p → q) :=
+  (fun hpnq : p ∧ ¬q =>
+    (fun hpq : p → q =>
+      show False from hpnq.right (hpq hpnq.left)))
+
+example : ¬p → (p → q) :=
+  (fun hnp : ¬p =>
+    (fun hp : p => False.elim (hnp hp)))
+
+example : (¬p ∨ q) → (p → q) :=
+  (fun hnpq : ¬p ∨ q =>
+    (fun hp : p =>
+      hnpq.elim
+        (fun hnp : ¬p => False.elim (hnp hp))
+        (fun hq : q => hq)))
+
+example : p ∨ False ↔ p :=
+  Iff.intro
+    (fun h₁ : p ∨ False =>
+      h₁.elim
+        (fun hp : p => hp)
+        (fun hf : False => False.elim hf))
+    (fun h₂ : p => Or.inl h₂)
+
+example : p ∧ False ↔ False :=
+  Iff.intro
+    (fun h₁ : p ∧ False =>
+      have hf : False := h₁.right
+      show False from hf)
+    (fun h₂ : False => False.elim h₂)
+
+example : (p → q) → (¬q → ¬p) :=
+  (fun hpq : p → q =>
+    (fun hnq : ¬q =>
+      (fun hp : p => show False from hnq (hpq hp))))
 
 
