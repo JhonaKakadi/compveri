@@ -137,15 +137,10 @@ example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=
 
 example : ¬p ∨ ¬q → ¬(p ∧ q) :=
   (fun h : ¬p ∨ ¬q =>
-    And.intro
-      (fun hp : p => show False from
-        h.elim
-          (fun hnp : ¬p => show False from absurd hp hnp)
-          (fun hnq : ¬q => sorry))
-      (fun hq : q => show False from
-        h.elim
-          (fun hnp : ¬p => show False from sorry)
-          (fun hnq : ¬q => show False from absurd hq hnq)))
+    (fun hpq : p ∧ q =>
+      h.elim
+        (fun hnp : ¬p => show False from False.elim (hnp hpq.left))
+        (fun hnq : ¬q => show False from False.elim (hnq hpq.right))))
 
 example : ¬(p ∧ ¬p) :=
   (fun hpnp : p ∧ ¬p =>
@@ -190,3 +185,77 @@ example : (p → q) → (¬q → ¬p) :=
       (fun hp : p => show False from hnq (hpq hp))))
 
 
+open Classical
+
+--variable (p q r : Prop)
+#check em p
+
+-- additional exercise
+example : (p ∨ ¬p) ↔ (¬¬p → p) :=
+  Iff.intro
+    (fun h₁ : p ∨ ¬p =>
+      (fun hnnp : ¬¬p =>
+        h₁.elim
+          (fun hp : p => hp)
+          (fun hnp : ¬p => absurd hnp hnnp)))
+    (fun _ : ¬¬p → p =>
+      byCases
+        (fun hp : p => Or.inl hp)
+        (fun hnp : ¬p => Or.inr hnp))
+
+example : (p → q ∨ r) → ((p → q) ∨ (p → r)) :=
+  (fun hpqr : p → q ∨ r =>
+    --Or.elim (em p)
+    byCases
+      (fun hp : p =>
+        Or.elim (hpqr hp)
+          (fun hq =>
+            Or.inl (fun _ => hq))
+          (fun hr =>
+            Or.inr (fun _ => hr)))
+      (fun hnp : ¬p =>
+        Or.inl (fun hp => absurd hp hnp)))
+          
+example : ¬(p ∧ q) → ¬p ∨ ¬q :=
+  (fun hnpq : ¬(p ∧ q) =>
+    Or.elim (em p)
+      (fun hp : p =>
+        Or.inr
+          (show ¬q from
+            fun hq : q =>
+              hnpq ⟨hp,hq⟩))
+      (fun hp : ¬p =>
+        Or.inl hp))
+      
+example : ¬(p → q) → p ∧ ¬q :=
+  (fun hnpq : ¬(p → q) =>
+    (fun hp : p =>
+      byCases (em q)
+        (fun hq : q =>
+          absurd
+            (fun hpq : p → q => hpq (hp))
+            hnpq)
+        (fun hq : ¬q => ⟨hp,hq⟩)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+example : (p → q) → (¬p ∨ q) := sorry
+example : (¬q → ¬p) → (p → q) := sorry
+example : p ∨ ¬p := sorry
+example : (((p → q) → p) → p) := sorry
