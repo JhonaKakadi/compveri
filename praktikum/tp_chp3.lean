@@ -189,6 +189,9 @@ open Classical
 
 --variable (p q r : Prop)
 #check em p
+#check byContradiction
+#check byCases
+#check False.elim
 
 -- additional exercise
 example : (p ∨ ¬p) ↔ (¬¬p → p) :=
@@ -229,13 +232,52 @@ example : ¬(p ∧ q) → ¬p ∨ ¬q :=
       
 example : ¬(p → q) → p ∧ ¬q :=
   (fun hnpq : ¬(p → q) =>
-    (fun hp : p =>
-      byCases (em q)
-        (fun hq : q =>
-          absurd
-            (fun hpq : p → q => hpq (hp))
-            hnpq)
-        (fun hq : ¬q => ⟨hp,hq⟩)))
+    byCases
+      (fun hp : p =>
+        Or.elim (em q)
+          (fun hq : q =>
+            absurd (fun _ => hq) hnpq)
+          (fun hq : ¬q => ⟨hp, hq⟩))
+      (fun hnp : ¬p =>
+        False.elim
+          (hnpq (fun hp : p => absurd hp hnp))))
+
+
+example : (p → q) → (¬p ∨ q) :=
+  (fun hpq : p → q =>
+    byCases
+      (fun hp : p =>
+        Or.inr (hpq hp))
+      (fun hp : ¬p =>
+        Or.inl hp))
+
+example : (¬q → ¬p) → (p → q) :=
+  (fun hnqnp : ¬q → ¬p =>
+    byCases
+      (fun hp : p =>
+        show p → q from sorry)
+      (fun hp : ¬p =>
+        show False from sorry))
+
+example : p ∨ ¬p := em p
+    
+example : (((p → q) → p) → p) :=
+  (fun hpqp : (p → q) → p =>
+    byCases
+      (fun hp : p => hp)
+      (fun hnp : ¬p => --False.elim (absurd (hpqp (fun hp : p => (fun hq : q => hq))) hnp )))
+        byCases
+          (fun hq : q =>
+            False.elim
+              (absurd
+                (hpqp (fun hp : p => hq)) -- hp
+                hnp))
+          (fun hnq : ¬q =>
+            False.elim
+              (show False from
+                hnq
+                (fun hpq : p → q => hpq)))))
+              --(absurd  ((fun hpq : p → q => (fun hq : q => hq))   hnq) ))))
 
 
 
@@ -255,7 +297,9 @@ example : ¬(p → q) → p ∧ ¬q :=
 
 
 
-example : (p → q) → (¬p ∨ q) := sorry
-example : (¬q → ¬p) → (p → q) := sorry
-example : p ∨ ¬p := sorry
-example : (((p → q) → p) → p) := sorry
+
+
+
+-- Prove ¬(p ↔ ¬p) without using classical logic.
+
+example : ¬(p ↔ ¬p) := sorry
