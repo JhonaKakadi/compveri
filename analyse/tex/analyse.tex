@@ -63,82 +63,54 @@
 \section{Introduction}
 \todo{
 	- insert an explanation what reasoning engines are and what they are used for 
+	- specifically we will focus on nemo
 }
 
-Reasoning engines (e.g. Nemo, Vlog) are used to process queries.
-Queries are formulated in a query language (e.g. SQL) and need to be compiled to a rule language (Datalog, in this case).
-The query language is based on a formalism, like relational algebra or first-order logic.
-Both the compilation to the rule language to the query language and the processing by the reasoning engine need to be verified.
-We want a mechanical way for this verification, which would otherwise be very tedious and error prone to conduct manually.
-Since verification is already used in the field of compilers, the central question to be answered is:
+\subsection{nemo}
+\todo{
+	- explain how it works, which transformations are there
+	  -> alex wurde angefragt
+}
+
+\subsection{Organisation}
+\todo{
+	- explain our goal and how we want to achieve it
+	  - what are the proof techniques of the field of formally verified compilers?
+	    - coq
+	  - has datalog already been specified? yes, where?
+	  - still have to formalize transformation to restricted datalog? -> ask alex?
+	  - 
+}
 
 How can we adapt proof techniques from the field of formally verified compilers to the verification of Datalog reasoning engines?
 
-We also want to answer the following questions:
-\begin{itemize}
-    \item What is the notion of a program (to be verified) in a Datalog rule engine like Nemo?
-    \begin{itemize}
-        \item so how does the input language / query language look like?
-    \end{itemize}
-    \item What is a feasable specification for Datalog reasoners, formalized in a proof language (Coq or Lean)?
-    \item How shall the semantics of the rule language be formalized?
-    \begin{itemize}
-        \item Datalog
-    \end{itemize}
-    \item What are (high-level to low-level) transformations to be addressed by the formalization?
-    \begin{itemize}
-        \item as there exists a similarity to transformations of compilers (front end - middle end - back end)
-    \end{itemize}
-    \item Can the analysed proof techniques help in the re-interpretation task (from low-level to high-level reasoning)?
-\end{itemize}
-
-
-\subsection{Organisation}
-We will 
-This article is an analysis that shall give an overview of the formalisms that already exist describing relational algebra.
-We will conclude what kind of formalisms there are and what are examples, as well as their respective advantages over the others.
-What questions came up when researching it?
-We also want to distinguish between formalisms in Coq and Lean.
-Based on those, we shall then discuss what theorem prover is more suitable for further implementation.
-At the end, we will state the next steps that are necessary to realise the formal verification of for example Nemo - a Datalog reasoner.
+In order to answer the above question we want to analyse the following aspects:
+We want to specify the input language regarding syntax and semantics.
+Nemo will do a transformation of the input into a more restricted rule language which we will see as an intermediate representation (IR).
+We want to specify the IR regarding syntax and semantics.
+The next step is to define the transformation from the input language to the IR.
+Showing preservation of semantics for this transformation can be done in one of the following ways:
+Either by showing the transformation itself preserves semantics or by showing that input and output of the transformation show the same semantics.
+After transformation of the input, the IR will be evaluated.
+Evaluation is another set of transformations for which preservation of semantic should be shown.
+For showing that the evaluation terminates, i.e. evaluation will never be stuck, we will formalise it based on a type system which should be formalised beforehand.
+A type checker will return errors for transformations that are not well-typed.
 
 \section{Background}
-\subsection{What are the proof techniques in verifying compilers?}
-    \begin{itemize}
-	\item paper 0 
-	\item paper 1 
-    \end{itemize}
-\subsection{What formalisations of Datalog semantics are there already?}
-    \begin{itemize}
-	\item paper 8
-	\item (paper 4)
-    \end{itemize}
-\subsection{Are there already formalisations of rule engines?}
-    \begin{itemize}
-	\item (paper 3)
-	\item (paper 4)
-	\item paper 7
-    \end{itemize}
-\subsection{Formalisations of query languages and their formalisations}
-    \begin{itemize}
-	\item ... 
-    \end{itemize}
-\subsubsection{Relational Algebra}
-    \begin{itemize}
-	\item paper 13
-	\item paper 12
-    \end{itemize}
 
-\section{How it all works together}
+\todo {
+	- collect steps from the above precedure that were already done
+}
 
-\section{How to verify Datalog reasoners}
-\subsection{Related to Practical Approach}
-    \begin{itemize}
-	\item paper 11
-    \end{itemize}
+\section{Next Steps}
+\todo {
+	- what is there yet to implement
+}
 
-
-\section{Can it be used for the re-interpretation task?}
+\subsection{Can it be used for the re-interpretation task?}
+\todo {
+	- future work
+}
 
 
 \end{document}
