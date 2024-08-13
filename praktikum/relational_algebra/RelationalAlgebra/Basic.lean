@@ -39,8 +39,8 @@ abbrev Row : Schema → Type
   | [] => Unit
   | [col] => col.contains.asType
   -- @Antonio: Good eye in seeying that col2 can be seemingly omitted here; however: this is intended to clearly distinguish the last case from the second case. In the second case the length of the schema is exactly one and by using col1 :: col2 :: cols in the last case, one can ensure that length is at least 2 here. With omitting col2, this would only be length at least 1. Not sure if this is a problem, but I like it better to have disjoint cases here.
-  --| col1 :: col2 :: cols => col1.contains.asType × Row (col2::cols)
-  | col1 :: cols => col1.contains.asType × Row (cols)
+  | col1 :: col2 :: cols => col1.contains.asType × Row (col2::cols)
+  --| col1 :: cols => col1.contains.asType × Row (cols)
 
 abbrev Table (s : Schema) := List (Row s)
 
@@ -155,6 +155,15 @@ def List.flatMap (f : α → List β) : (xs : List α) → List β
 def Table.cartesianProduct (table1 : Table s1) (table2 : Table s2) : Table (s1 ++ s2) :=
   table1.flatMap fun r1 => table2.map r1.append
 
+-- join
+def Table.nJoin (table1 : Table s1) (table2 : Table s2) : Table (s1 ++ s2) :=
+  table1.flatMap fun r1 => table2.filterMap r1.append
+  -- like cartesianProduct, but with a condition: two columns must be of the same name
+  -- and have at least one common entry
+  -- Option type
+  -- output schema should merge common rows, not like s1 ++ s2
+  
+
 -- difference
 def List.without [BEq α] (source banned : List α) : List α :=
   source.filter fun r => !(banned.contains r)
@@ -183,7 +192,7 @@ def Query.exec : Query s → Table s
   | .product q1 q2 _ => exec q1 |>.cartesianProduct (exec q2)
   | .renameColumn q c _ _ => exec q |>.map (·.rename c) 
   | .prefixWith _ q => exec q |>.map prefixRow
-  | .naturalJoin q1 q2 => sorry -- TODO: define join direcly
+  | .naturalJoin q1 q2 => exec q1 |>.nJoin (exec q2)
 
 -- TODO: prove this theorem
 theorem join_eq_product_on_disjoint_schema (q1 : Query s1) (q2 : Query s2) (disj : disjoint (s1.map Column.name) (s2.map Column.name)) : (cast (by 
@@ -201,3 +210,44 @@ def join_via_other_operations (q1 : Query s1) (q2 : Query s2) : Table (s1 ++ (s2
 theorem join_defs_eq (q1 : Query s1) (q2 : Query s2) : (Query.naturalJoin q1 q2).exec = join_via_other_operations q1 q2 := by 
   sorry
 
+
+
+-- tests
+def R : Schema := [
+  ⟨"A", DBType.int⟩,
+  ⟨"B", DBType.int⟩
+]
+
+def S : Schema := [
+  ⟨"A", DBType.int⟩,
+  ⟨"F", DBType.int⟩,
+  ⟨"G", DBType.int⟩
+]
+
+def exR : Table R := [
+  (1, 2),
+  (4, 5),
+  (7, 8)
+]
+
+def exS : Table S := [
+  (1, 2, 3),
+  (7, 8, 9)
+]
+
+open Query in
+def example1 :=
+  let t1 := table exR |>.prefixWith "R"
+  let t2 := table exS |>.prefixWith "S"
+  t1.product t2 (by repeat constructor)
+    |>.select (.eq (c! "R.A") (c! "S.A"))
+    |>.project [⟨"R.A", .int⟩, ⟨"S.A", .int⟩] (by repeat constructor)
+
+-- common column still needs to be merged, so that solution contains only 4 columns
+def solution : Table (R ++ S) := [
+  (1, 2, 1, 2, 3),
+  (7, 8, 7, 8, 9)
+]
+
+#eval example1
+-- compare example1 and solution
