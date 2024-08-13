@@ -1,5 +1,6 @@
 inductive DBType where
   | int | float | string | bool
+deriving DecidableEq
 
 abbrev DBType.asType : DBType → Type
   | .int => Int
@@ -30,12 +31,14 @@ instance {t : DBType} : Repr t.asType where
 structure Column where
   name : String
   contains : DBType
+deriving DecidableEq
 
 abbrev Schema := List Column
 
 abbrev Row : Schema → Type
   | [] => Unit
   | [col] => col.contains.asType
+  -- @Antonio: Good eye in seeying that col2 can be seemingly omitted here; however: this is intended to clearly distinguish the last case from the second case. In the second case the length of the schema is exactly one and by using col1 :: col2 :: cols in the last case, one can ensure that length is at least 2 here. With omitting col2, this would only be length at least 1. Not sure if this is a problem, but I like it better to have disjoint cases here.
   --| col1 :: col2 :: cols => col1.contains.asType × Row (col2::cols)
   | col1 :: cols => col1.contains.asType × Row (cols)
 
@@ -130,12 +133,14 @@ inductive Query : Schema → Type where
   | prefixWith :
       (n : String) → Query s →
       Query (s.map fun c => {c with name := n ++ "." ++ c.name})
+  | naturalJoin : 
+    Query s1 -> Query s2 -> Query (s1 ++ (s2.removeAll s1))
 
 -- cartesian
 def addVal (v : c.contains.asType) (row : Row s) : Row (c :: s) :=
   match s, row with
   | [], () => v
-  | c' :: cs, v' => (v, v')
+  | _ :: _, v' => (v, v')
 
 def Row.append (r1 : Row s1) (r2 : Row s2) : Row (s1 ++ s2) :=
   match s1, r1 with
@@ -178,4 +183,21 @@ def Query.exec : Query s → Table s
   | .product q1 q2 _ => exec q1 |>.cartesianProduct (exec q2)
   | .renameColumn q c _ _ => exec q |>.map (·.rename c) 
   | .prefixWith _ q => exec q |>.map prefixRow
+  | .naturalJoin q1 q2 => sorry -- TODO: define join direcly
+
+-- TODO: prove this theorem
+theorem join_eq_product_on_disjoint_schema (q1 : Query s1) (q2 : Query s2) (disj : disjoint (s1.map Column.name) (s2.map Column.name)) : (cast (by 
+    have : s2.removeAll s1 = s2 := by 
+      -- TODO: first show that the types are equal by showing that removing s1 from s2 yields exactly s2 (using disj)
+      -- this should probably go into another general theorem about lists
+      sorry
+    rw [this]
+  ) (Query.naturalJoin q1 q2).exec) = (Query.product q1 q2 disj).exec := by 
+  sorry
+
+def join_via_other_operations (q1 : Query s1) (q2 : Query s2) : Table (s1 ++ (s2.removeAll s1)) :=
+  sorry -- TODO: define join via other operations (prefixWith, product, select, project) (could be quite hard due to renamings)
+
+theorem join_defs_eq (q1 : Query s1) (q2 : Query s2) : (Query.naturalJoin q1 q2).exec = join_via_other_operations q1 q2 := by 
+  sorry
 
