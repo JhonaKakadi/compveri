@@ -154,14 +154,24 @@ def List.flatMap (f : α → List β) : (xs : List α) → List β
 
 def Table.cartesianProduct (table1 : Table s1) (table2 : Table s2) : Table (s1 ++ s2) :=
   table1.flatMap fun r1 => table2.map r1.append
+  --table1.flatMap (fun r1 => (table2.map (fun r2 => Row.append r1 r2)))
 
 -- join
 def Table.nJoin (table1 : Table s1) (table2 : Table s2) : Table (s1 ++ s2) :=
-  table1.flatMap fun r1 => table2.filterMap r1.append
-  -- like cartesianProduct, but with a condition: two columns must be of the same name
-  -- and have at least one common entry
-  -- Option type
-  -- output schema should merge common rows, not like s1 ++ s2
+  let s_common := List.filter s2.contains s1
+  table1.flatMap (fun r1 => table2.filterMap (fun r2 => s_common.map (fun c =>    
+    if (Row.get r1 s1 c.name c.contains) == (Row.get r2 (HasCol s2 c.name c.contains)) then
+      Option.some (r1.append r2)
+    else
+      Option.none)))
+
+def Schema.has_col_from_elem (s : Schema) (col : Column) (h : col_in_s) : HasCol s col.name col.contains :=
+  match s, col, h with
+  | [], c, _ => sorry -- prove that this case won't happen
+  | [col], c, _ => .here
+  | s::s1, c, _ =>  sorry -- by repeat constructor?
+  
+
   
 
 -- difference
@@ -251,3 +261,14 @@ def solution : Table (R ++ S) := [
 
 #eval example1
 -- compare example1 and solution
+
+def s1 := [1]
+def s2 := [1,2]
+#eval s1.filter fun c1 => s2.contains c1
+#eval s1.filter s2.contains
+#eval List.filter s2.contains s1
+
+
+
+
+
