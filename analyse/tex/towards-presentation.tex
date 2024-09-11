@@ -45,7 +45,7 @@
 	\frametitle{What is the problem}
 	
 	\begin{columns}
-	\column{0.5\textwidth}
+	\column{0.9\textwidth}
 		\begin{itemize}
 		\item optimisations need formal verification
 			\begin{itemize}
@@ -54,7 +54,7 @@
 			\end{itemize}
 		\item correctness guarantees should not compromise efficiency
 		\end{itemize}
-	\column{0.5\textwidth}
+	\column{0.1\textwidth}
 		
 	\end{columns}
 	
@@ -139,10 +139,15 @@
 
 \begin{frame}
 	\frametitle{Nemo}
-	\begin{center}
-	\includegraphics[scale=.5]{figures/nemo.png}
-	\end{center}
-	
+	\only<1> {
+		\begin{center}
+		\includegraphics[scale=.5]{figures/nemo.png}
+		\end{center}
+	}
+	\only<2> {
+		\[ \texttt{a(x) :- b("foo", x).} \]
+		\[ \texttt{a(x) :- b(var, x), var = "foo").} \]
+	}
 \end{frame}
 
 \begin{frame}
@@ -150,26 +155,30 @@
 	\begin{center}
 	\includegraphics[scale=.6]{figures/vlog.png}
 	\end{center}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Soufflé}
-	\begin{center}
-	
-	\end{center}
+	\vspace{1em}
+		t.d. = top-down (query-driven reasoning)
+		
+		b.u. = bottom-up (materialisation)
 \end{frame}
 
 \begin{frame}
 	\frametitle{Vadalog}
 	\begin{center}
-	
+	\includegraphics[scale=.6]{figures/vadalog.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Soufflé}
+	\begin{center}
+	\includegraphics[scale=.6]{figures/souffle.png}
 	\end{center}
 \end{frame}
 
 \begin{frame}
 	\frametitle{LogicBlox}
 	\begin{center}
-	
+	\includegraphics[scale=.6]{figures/logicblox.png}
 	\end{center}
 \end{frame}
 
@@ -177,37 +186,20 @@
 \section{Task}
 
 \begin{frame}
-	\frametitle{What they have in common}
-		todo
-	
-		\begin{tabular}{|c||c|c|c|c|c|} 
-		 \hline
-		  & nemo & VLog & Vadalog & LogicBlox & Soufflé \\
-		 \hline\hline
-		 type & 2, 3 & 2 & 2 & 3 & 3 \\ 
-		 \hline
-		 data strct & tries & QSQR & ? & treaps & tries \\
-		 \hline
-		 graph repr & DAG & magic sets & KG & ? & B-tree \\
-		 \hline
-		 storage & delta tables & derivation storage & KG repos & workspaces & R.A.M \\
-		 \hline
-		 join & LFTJ & ? & ? & LFTJ & loop-based \\
-		 \hline
-		 reasoning & t.d. & t.d./b.u. & . & . & . \\
-		 \hline
-		\end{tabular}
-		
-		\vspace{1em}
-		t.d. = top-down (query-driven reasoning)
-		
-		b.u. = bottom-up (materialisation)
-
+	\frametitle{Structural similarities}
+		\begin{itemize}
+			\item top-down evaluation (query-driven reasoning) and/or bottom-up (materialisation)
+			\item distinction between IDB and EDB (e.g. delta tables)
+			\item some initial parsing into an AST
+			\item rewriting (e.g. constraint normalisation)
+			\item a graph representation of the database and some structure to access it
+			\item query engine or materialisation engine
+			\item usage of relational algebra to process tables
+		\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Concrete plans for verification}
-	todo
 	\begin{itemize}
 		\item semi-naive evaluation (since it's optimized)
 		\item LFTJ (since it's optimized)
