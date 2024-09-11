@@ -99,7 +99,7 @@
 	\vspace{1em}
 	\only<1>{ "If the compiler produces compiled code \(C\) from source code \(S\), without reporting compile-time errors, then every observable behavior (\(B\)) of \(C\) is either identical to an allowed behavior of \(S\), or improves over such an allowed behavior of \(S\) by replacing undefined behaviors with more defined behaviors." \small{[2]}}
 	\only<2>{ \vspace{3em} \[ S \text{ \texttt{safe}} \Rightarrow \forall B, S \Downarrow B \iff C \Downarrow B \] }
-	\only<3>{ \[ \forall S, C, Comp(S) = \text{\texttt{OK}} (C) \Rightarrow S \approx C \] }
+	\only<3>{ \vspace{3em} \[ \forall S, C, Comp(S) = \text{\texttt{OK}} (C) \Rightarrow S \approx C \] }
 \end{frame}
 
 
@@ -146,7 +146,7 @@
 	}
 	\only<2> {
 		\[ \texttt{a(x) :- b("foo", x).} \]
-		\[ \texttt{a(x) :- b(var, x), var = "foo").} \]
+		\[ \texttt{a(x) :- b(var, x), var = "foo".} \]
 	}
 \end{frame}
 
@@ -206,6 +206,10 @@
 		\item 1-parallel restricted chase
 		\item (skolem chase)
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\center{Time for questions :)}
 \end{frame}
 
 \begin{frame}
